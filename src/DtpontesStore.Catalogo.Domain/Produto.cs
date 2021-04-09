@@ -16,6 +16,8 @@ namespace DtpontesStore.Catalogo.Domain
             Valor = valor;
             DataCadastro = dataCadastro;
             Imagem = imagem;
+
+            Validar();
         }
 
         public Guid CategoriaId { get; private set; }
@@ -47,12 +49,14 @@ namespace DtpontesStore.Catalogo.Domain
 
         public void AlterarDescricao(string descricao)
         {
+            Validacoes.ValidarSeVazio(descricao, "O campo descrição não pode estar vazio");
             Descricao = descricao;
         }
 
         public void DebitarEstoque(int quantidade)
         {
             if (quantidade < 0) quantidade *= -1;
+            if (!PossuiEstoque(quantidade)) throw new DomainException("Estoque Insuficiente");
             QuantidadeEstoque -= quantidade;
         }
 
@@ -67,28 +71,18 @@ namespace DtpontesStore.Catalogo.Domain
             return QuantidadeEstoque >= quantidade;
         }
 
+        /// <summary>
+        /// Validações de Dominio
+        /// </summary>
         public void Validar()
         {
+            Validacoes.ValidarSeVazio(Nome, "O nome do produto não pode estar vazio");
+            Validacoes.ValidarSeVazio(Descricao, "A Descrição do produto não pode estar vazia");
+            Validacoes.ValidarSeDiferente(CategoriaId,Guid.Empty, "O CategoriaId do produto não pode estar vazio");
+            Validacoes.ValidarSeMenorQue(QuantidadeEstoque,0, "A quantidade não pode ser menor que zero");
+            Validacoes.ValidarSeVazio(Imagem, "O campo Imagem do produto não pode estar vazio");
 
-        }
 
-    }
-
-    public class Categoria : Entity
-    {
-        public Categoria(string nome, int codigo)
-        {
-            Nome = nome;
-            Codigo = codigo;
-        }
-
-        public string Nome { get; private set; }
-
-        public int Codigo { get; private set; }
-
-        public override string ToString()
-        {
-            return $"{Nome} - {Codigo}";
         }
 
     }
