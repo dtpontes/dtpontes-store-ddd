@@ -7,7 +7,7 @@ namespace DtpontesStore.Catalogo.Domain
 {
     public class Produto : Entity, IAggregateRoot
     {
-        public Produto(Guid categoriaId, string nome, string descricao, bool ativo, decimal valor, DateTime dataCadastro, string imagem)
+        public Produto(Guid categoriaId, string nome, string descricao, bool ativo, decimal valor, DateTime dataCadastro, string imagem, Dimensoes dimensoes)
         {
             CategoriaId = categoriaId;
             Nome = nome;
@@ -16,6 +16,7 @@ namespace DtpontesStore.Catalogo.Domain
             Valor = valor;
             DataCadastro = dataCadastro;
             Imagem = imagem;
+            Dimensoes = dimensoes;
 
             Validar();
         }
@@ -36,6 +37,8 @@ namespace DtpontesStore.Catalogo.Domain
         public int QuantidadeEstoque { get; private set; }
 
         public Categoria Categoria { get; private set; }
+
+        public Dimensoes Dimensoes { get; private set; }
 
         public void Ativar() => Ativo = true;
 
