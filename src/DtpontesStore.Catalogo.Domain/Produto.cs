@@ -21,6 +21,8 @@ namespace DtpontesStore.Catalogo.Domain
             Validar();
         }
 
+        protected Produto() { }
+
         public Guid CategoriaId { get; private set; }
         public string Nome { get; private set; }
 
