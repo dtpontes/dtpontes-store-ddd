@@ -81,8 +81,9 @@ namespace DtpontesStore.Catalogo.Domain
         {
             Validacoes.ValidarSeVazio(Nome, "O nome do produto não pode estar vazio");
             Validacoes.ValidarSeVazio(Descricao, "A Descrição do produto não pode estar vazia");
-            Validacoes.ValidarSeDiferente(CategoriaId,Guid.Empty, "O CategoriaId do produto não pode estar vazio");
+            Validacoes.ValidarSeIgual(CategoriaId,Guid.Empty, "O CategoriaId do produto não pode estar vazio");
             Validacoes.ValidarSeMenorQue(QuantidadeEstoque,0, "A quantidade não pode ser menor que zero");
+            Validacoes.ValidarSeIgual(QuantidadeEstoque, 0, "A quantidade não pode ser igual a  zero");
             Validacoes.ValidarSeVazio(Imagem, "O campo Imagem do produto não pode estar vazio");
 
 
