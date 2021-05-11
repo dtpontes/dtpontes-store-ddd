@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DtpontesStore.Catalogo.Domain.Event;
+using DtpontesStore.Core.Bus;
+using System;
 using System.Threading.Tasks;
 
 namespace DtpontesStore.Catalogo.Domain
@@ -8,10 +8,12 @@ namespace DtpontesStore.Catalogo.Domain
     public class EstoqueService : IEstoqueService
     {
         private readonly IProdutoRepository _produtorepository;
+        private readonly IMediatrHandler _bus;
 
-        public EstoqueService(IProdutoRepository produtorepository)
+        public EstoqueService(IProdutoRepository produtorepository, IMediatrHandler bus)
         {
             _produtorepository = produtorepository;
+            _bus = bus;
         }
 
         public async Task<bool> DebitarEstoque(Guid produtoId, int quantidade)
@@ -23,6 +25,11 @@ namespace DtpontesStore.Catalogo.Domain
             if (!produto.PossuiEstoque(quantidade)) return false;
 
             produto.DebitarEstoque(quantidade);
+
+            if(produto.QuantidadeEstoque < 10)
+            {
+                await _bus.PublicarEvento(new ProdutoAbaixoEstoqueEvent(produto.Id, produto.QuantidadeEstoque));
+            }
 
             return await _produtorepository.UnitOfWork.Commit();
         }        
